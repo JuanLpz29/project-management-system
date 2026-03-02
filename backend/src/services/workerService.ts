@@ -34,36 +34,3 @@ export const getAllWorkers = (): Worker[] => {
     seniority: worker.seniority
   }));
 };
-
-export const getWorkerById = (id: number): Worker => {
-  const worker = db
-    .prepare(`
-      SELECT id, name, role, seniority
-      FROM workers
-      WHERE id = ?
-    `)
-    .get(id) as Worker | undefined;
-
-  if (!worker) {
-    throw new Error("WORKER_NOT_FOUND");
-  }
-
-  return {
-    id: worker.id,
-    name: worker.name,
-    role: worker.role,
-    seniority: worker.seniority
-  };
-};
-
-export const deleteWorker = (id: number): void => {
-  const worker = db
-    .prepare("SELECT id FROM workers WHERE id = ?")
-    .get(id);
-
-  if (!worker) {
-    throw new Error("WORKER_NOT_FOUND");
-  }
-
-  db.prepare("DELETE FROM workers WHERE id = ?").run(id);
-};
